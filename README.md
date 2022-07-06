@@ -1,7 +1,14 @@
 # my-contacts
-Contact management application
+Contact management API
 <br />
 <br />
+<h2>Techs used:</h2>
+<ul>
+  <li>Node.js</li> 
+  <li>Express</li>
+  <li>Postgres (BD)</li>
+</ul>
+
 <h2>Requirements:</h2>
 <ul>
   <li>Node >= 12</li> 
