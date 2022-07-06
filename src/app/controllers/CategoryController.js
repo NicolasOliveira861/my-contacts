@@ -4,7 +4,7 @@ class CategoryController {
   async index(request, response) {
     const categories = await CategoriesRepository.findAll();
 
-    response.send(categories);
+    response.json(categories);
   }
 
   async store(request, response) {
