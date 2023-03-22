@@ -10,8 +10,8 @@ export const Button = styled.button`
   border: none;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.04);
   border-radius: 4px;
-  width: 100%;
   transition: background 0.2s ease-in;
+  padding: 0 16px;
 
   &:hover {
     background: ${({ theme }) => theme.colors.primary.light};

@@ -8,4 +8,8 @@ export const Container = styled.form`
 
 export const ButtonContainer = styled.div`
   margin-top: 8px;
+
+  button {
+    width: 100%;
+  }
 `;
