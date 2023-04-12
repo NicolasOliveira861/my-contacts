@@ -1,3 +1,6 @@
+/* eslint-disable indent */
+/* eslint-disable implicit-arrow-linebreak */
+/* eslint-disable no-confusing-arrow */
 import styled from 'styled-components';
 
 export const Overlay = styled.div`
@@ -24,6 +27,8 @@ export const Container = styled.div`
 
   h1 {
     font-size: 22px;
+    color: ${({ theme, danger }) =>
+      danger ? theme.colors.danger.main : theme.colors.dark[900]};
   }
 
   p {

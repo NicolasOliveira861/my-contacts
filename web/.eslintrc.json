@@ -29,7 +29,9 @@
           "minProperties": 5
         }
       }
-    ]
+    ],
+    "indent": ["error", 2],
+    "comma-dangle": ["error", "only-multiline"]
     // "quotes": ["error", "single"]
   }
 }
