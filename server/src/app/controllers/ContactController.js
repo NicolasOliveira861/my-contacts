@@ -6,6 +6,7 @@ class ContactController {
     // List ALL registries
     const contacts = await ContactsRepository.findAll(orderBy);
 
+    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     response.json(contacts);
   }
 
@@ -25,14 +26,11 @@ class ContactController {
 
   async store(request, response) {
     // Create a registry
-    const {
-      name, email, phone, category_id,
-    } = request.body;
+    // eslint-disable-next-line object-curly-newline
+    const { name, email, phone, category_id } = request.body;
 
     if (!name) {
-      return response
-        .status(400)
-        .json({ error: 'Name field is required!' });
+      return response.status(400).json({ error: 'Name field is required!' });
     }
 
     const contactExists = await ContactsRepository.findByEmail(email);
@@ -56,12 +54,7 @@ class ContactController {
   async update(request, response) {
     // Edit a registry
     const { id } = request.params;
-    const {
-      name,
-      email,
-      phone,
-      category_id,
-    } = request.body;
+    const { name, email, phone, category_id } = request.body;
 
     const contactExists = await ContactsRepository.findById(id);
 
@@ -70,9 +63,7 @@ class ContactController {
     }
 
     if (!name) {
-      return response
-        .status(400)
-        .json({ error: 'Name field is required!' });
+      return response.status(400).json({ error: 'Name field is required!' });
     }
 
     const contactByEmail = await ContactsRepository.findByEmail(email);
