@@ -1,4 +1,7 @@
+/* eslint-disable react/jsx-one-expression-per-line */
+/* eslint-disable operator-linebreak */
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import arrow from '../../assets/images/icons/arrow.svg';
 import edit from '../../assets/images/icons/edit.svg';
 import trash from '../../assets/images/icons/trash.svg';
@@ -12,6 +15,20 @@ import {
 } from './styles';
 
 export default function Home() {
+  const [contacts, setContacts] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:3001/contacts/')
+      .then(async (res) => {
+        const json = await res.json();
+
+        setContacts(json);
+      })
+      .catch((err) => console.log({ err }));
+  }, []);
+
+  useEffect(() => console.log({ contacts }), [contacts]);
+
   return (
     <Container>
       <InputSearchContainer>
@@ -19,7 +36,9 @@ export default function Home() {
       </InputSearchContainer>
 
       <Header>
-        <strong>3 contatos</strong>
+        <strong>
+          {contacts.length} {contacts.length === 1 ? 'contato' : 'contatos'}
+        </strong>
 
         <Link to="/new">Novo contato</Link>
       </Header>
@@ -31,7 +50,33 @@ export default function Home() {
             <img src={arrow} alt="Up Arrow Icon" />
           </button>
         </header>
-        <Card>
+        {contacts?.length > 0 &&
+          contacts.map((contact) => (
+            <Card key={contact.id}>
+              <div className="info">
+                <div className="contact-name">
+                  <strong>{contact.name}</strong>
+                  {contact.category_name && (
+                    <small>{contact.category_name}</small>
+                  )}
+                </div>
+                <span>{contact.email}</span>
+                <span>{contact.phone}</span>
+              </div>
+
+              <div className="actions">
+                <Link to={`/edit/${contact.id}`}>
+                  <img src={edit} alt="Edit" />
+                </Link>
+
+                <button type="button">
+                  <img src={trash} alt="Delete" />
+                </button>
+              </div>
+            </Card>
+          ))}
+
+        {/* <Card>
           <div className="info">
             <div className="contact-name">
               <strong>Nicolas Oliveira</strong>
@@ -50,7 +95,7 @@ export default function Home() {
               <img src={trash} alt="Delete" />
             </button>
           </div>
-        </Card>
+        </Card> */}
       </ListContainer>
     </Container>
   );
