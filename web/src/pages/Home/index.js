@@ -20,8 +20,9 @@ export default function Home() {
   const [orderBy, setOrderBy] = useState('asc');
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredContacts = contacts.filter((contact) =>
-    contact.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredContacts = contacts.filter(
+    (contact) => contact.name.toLowerCase().includes(searchTerm.toLowerCase())
+    // contact.name.toLowerCase().startsWith(searchTerm.toLowerCase())
   );
 
   function fetchData() {
