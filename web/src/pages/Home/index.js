@@ -1,7 +1,8 @@
-/* eslint-disable react/jsx-one-expression-per-line */
-/* eslint-disable operator-linebreak */
-import { Link } from 'react-router-dom';
+/* eslint-disable react/jsx-no-bind */
+/* eslint-disable function-paren-newline */
+/* eslint-disable implicit-arrow-linebreak */
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import arrow from '../../assets/images/icons/arrow.svg';
 import edit from '../../assets/images/icons/edit.svg';
 import trash from '../../assets/images/icons/trash.svg';
@@ -11,92 +12,94 @@ import {
   Container,
   Header,
   InputSearchContainer,
-  ListContainer,
+  ListHeader,
 } from './styles';
 
 export default function Home() {
   const [contacts, setContacts] = useState([]);
+  const [orderBy, setOrderBy] = useState('asc');
+  const [searchTerm, setSearchTerm] = useState('');
 
-  useEffect(() => {
-    fetch('http://localhost:3001/contacts/')
+  const filteredContacts = contacts.filter((contact) =>
+    contact.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  function fetchData() {
+    fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`)
       .then(async (res) => {
         const json = await res.json();
 
         setContacts(json);
       })
       .catch((err) => console.log({ err }));
-  }, []);
+  }
 
-  useEffect(() => console.log({ contacts }), [contacts]);
+  useEffect(fetchData, [orderBy]);
+
+  function handleOrderBy() {
+    setOrderBy((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+  }
+
+  function handleChangeSearchTerm(event) {
+    setSearchTerm(event.target.value);
+  }
 
   return (
     <Container>
       <InputSearchContainer>
-        <input type="text" placeholder="Pesquisar contato..." />
+        <input
+          type="text"
+          placeholder="Pesquisar contato..."
+          onChange={handleChangeSearchTerm}
+        />
       </InputSearchContainer>
-
       <Header>
         <strong>
-          {contacts.length} {contacts.length === 1 ? 'contato' : 'contatos'}
+          {filteredContacts.length}{' '}
+          {filteredContacts.length === 1 ? 'contato' : 'contatos'}
         </strong>
 
         <Link to="/new">Novo contato</Link>
       </Header>
 
-      <ListContainer>
-        <header>
-          <button className="sort-button" type="button">
+      {filteredContacts.length > 0 && (
+        <ListHeader>
+          <button className="sort-button" type="button" onClick={handleOrderBy}>
             Nome
-            <img src={arrow} alt="Up Arrow Icon" />
+            <img
+              src={arrow}
+              alt="Up Arrow Icon"
+              className={orderBy === 'desc' ? 'active' : ''}
+            />
           </button>
-        </header>
-        {contacts?.length > 0 &&
-          contacts.map((contact) => (
-            <Card key={contact.id}>
-              <div className="info">
-                <div className="contact-name">
-                  <strong>{contact.name}</strong>
-                  {contact.category_name && (
-                    <small>{contact.category_name}</small>
-                  )}
-                </div>
-                <span>{contact.email}</span>
-                <span>{contact.phone}</span>
+        </ListHeader>
+      )}
+
+      {filteredContacts?.length > 0 &&
+        filteredContacts.map((contact) => (
+          <Card key={contact.id}>
+            <div className="info">
+              <div className="contact-name">
+                <strong>{contact.name}</strong>
+                {contact.category_name && (
+                  <small>{contact.category_name}</small>
+                )}
               </div>
-
-              <div className="actions">
-                <Link to={`/edit/${contact.id}`}>
-                  <img src={edit} alt="Edit" />
-                </Link>
-
-                <button type="button">
-                  <img src={trash} alt="Delete" />
-                </button>
-              </div>
-            </Card>
-          ))}
-
-        {/* <Card>
-          <div className="info">
-            <div className="contact-name">
-              <strong>Nicolas Oliveira</strong>
-              <small>instagram</small>
+              <span>{contact.email}</span>
+              <span>{contact.phone}</span>
             </div>
-            <span>nicolassouzadeoliveira84@gmail.com</span>
-            <span>(41)99999-9999</span>
-          </div>
 
-          <div className="actions">
-            <Link to="/edit/123">
-              <img src={edit} alt="Edit" />
-            </Link>
+            <div className="actions">
+              <Link to={`/edit/${contact.id}`}>
+                <img src={edit} alt="Edit" />
+              </Link>
 
-            <button type="button">
-              <img src={trash} alt="Delete" />
-            </button>
-          </div>
-        </Card> */}
-      </ListContainer>
+              <button type="button">
+                <img src={trash} alt="Delete" />
+              </button>
+            </div>
+          </Card>
+        ))}
     </Container>
   );
 }

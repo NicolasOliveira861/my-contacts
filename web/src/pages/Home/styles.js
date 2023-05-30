@@ -49,20 +49,27 @@ export const Header = styled.header`
   }
 `;
 
-export const ListContainer = styled.div`
+export const ListHeader = styled.header`
   margin: 24px 0 0;
 
-  header {
-    margin-bottom: 8px;
+  margin-bottom: 8px;
 
-    .sort-button {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: bold;
-      color: ${({ theme }) => theme.colors.primary.main};
-      border: none;
-      background: transparent;
+  .sort-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    color: ${({ theme }) => theme.colors.primary.main};
+    border: none;
+    background: transparent;
+
+    img {
+      transform: rotate(0);
+      transition: all 0.3s ease-in;
+
+      &.active {
+        transform: rotate(180deg);
+      }
     }
   }
 `;
