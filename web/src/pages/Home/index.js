@@ -1,11 +1,12 @@
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable function-paren-newline */
 /* eslint-disable implicit-arrow-linebreak */
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import arrow from '../../assets/images/icons/arrow.svg';
 import edit from '../../assets/images/icons/edit.svg';
 import trash from '../../assets/images/icons/trash.svg';
+import Loader from '../../components/Loader';
 
 import {
   Card,
@@ -19,20 +20,28 @@ export default function Home() {
   const [contacts, setContacts] = useState([]);
   const [orderBy, setOrderBy] = useState('asc');
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
 
-  const filteredContacts = contacts.filter(
-    (contact) => contact.name.toLowerCase().includes(searchTerm.toLowerCase())
-    // contact.name.toLowerCase().startsWith(searchTerm.toLowerCase())
+  const filteredContacts = useMemo(
+    () =>
+      contacts.filter((contact) =>
+        contact.name.toLowerCase().includes(searchTerm.toLowerCase())
+      ),
+    [contacts, searchTerm]
   );
 
   function fetchData() {
+    setLoading(true);
+
     fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`)
       .then(async (res) => {
         const json = await res.json();
 
         setContacts(json);
       })
-      .catch((err) => console.log({ err }));
+      .catch((err) => console.log({ err }))
+
+      .finally(() => setLoading(false));
   }
 
   useEffect(fetchData, [orderBy]);
@@ -47,6 +56,8 @@ export default function Home() {
 
   return (
     <Container>
+      <Loader isLoading={loading} />
+
       <InputSearchContainer>
         <input
           type="text"
